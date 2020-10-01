@@ -1,0 +1,23 @@
+{
+  "name": "agrotrust-core",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get your application up and running.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://GaneshAnantwar@bitbucket.org/agrotrust-10/agrotrust-core.git"
+  },
+  "author": "ganesh@emertech.io",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/agrotrust-10/agrotrust-core#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
