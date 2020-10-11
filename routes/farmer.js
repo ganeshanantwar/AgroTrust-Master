@@ -24,7 +24,7 @@ const controller = require('../controllers/farmerController.js');
     }
  */
 
-router.post('/create', controller.create);
+router.post('/create/:le', controller.create);
 
 /**
  * Farmer list all sample request:

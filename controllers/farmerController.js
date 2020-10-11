@@ -4,12 +4,13 @@ exports.create = async (req, res) => {
 
     //parse request JSON for mandatory and optional fields
 
-    let regLE = req.body.regLE;
+    let regLE = req.params.le;
     let regDate = req.body.regDate;
     let fName = req.body.fName;
     let lName = req.body.lName;
-    let assoc = req.body.assoc;
     let mName = req.body.mName;
+    let crops=req.body.crops;
+    let assoc = req.body.assoc;
     let img = req.body.img;
     let gender = req.body.gender;
     let dob = req.body.dob;
@@ -27,9 +28,11 @@ exports.create = async (req, res) => {
         farmerCode: farmerCode,
         regLE: regLE,
         regDate: regDate,
-        assoc: assoc,
         fName: fName,
         lName: lName,
+        mName: mName,
+        crops:crops,
+        assoc: assoc,
         img: img,
         gender: gender,
         dob: dob,
@@ -40,15 +43,14 @@ exports.create = async (req, res) => {
         status: true
     };
 
-    //Publish farmer object to all crop blockchains
-    let mainPublish = await multichain(regLE, [], 'publish', ['farmer', farmerCode, { json: farmerObject }, 'offchain']);
+    //Publish farmer object to crop blockchains
+    let mainPublish = await multichain(regLE, crops, 'publish', ['farmer', farmerCode, { json: farmerObject }, 'offchain']);
     if (mainPublish.error == true) {
         res.status(400).json({ failure: 'Unable to publish farmer object to stream' });
     } else {
-        let idPublish = await multichain(regLE, [], 'publish', ['idmap', 'farmer', farmerCode, 'offchain']);
+        let idPublish = await multichain(regLE, crops, 'publish', ['idmap', 'farmer', farmerCode, 'offchain']);
         res.status(200).json({ success: 'New farmer registered', farmerCode: farmerCode, legalEntity: req.body.regLE });
     }
-
 
 };
 
@@ -108,10 +110,11 @@ exports.update = async (req, res) => {
             res.status(400).json({ failure: 'Farmer code ' + farmerCode + ' awaiting confirmation on blockchain' });
         } else {
             farmerObject = streamItem[0][0].data.json;
+            let crops=farmerObject.crops;
             let updatedFarmerObject = { ...farmerObject, ...req.body };
 
             //Publish updated farmer object to org blockchain
-            let mainPublish = await multichain(regLE, [], 'publish', ['farmer', farmerCode, { json: updatedFarmerObject }, 'offchain']);
+            let mainPublish = await multichain(regLE, crops, 'publish', ['farmer', farmerCode, { json: updatedFarmerObject }, 'offchain']);
             if (mainPublish.error == true) {
                 res.status(400).json({ failure: 'Unable to publish farmer object to stream' });
             } else {

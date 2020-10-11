@@ -2,8 +2,9 @@ const multichain = require('../utils/multichain.js');
 
 exports.create = async (req, res) => {
     //parse request JSON for mandatory and optional fields
-    let regLE = req.body.regLE;
+    let regLE = req.params.le;
     let farmerCode = req.body.farmerCode;
+    let crops=req.body.crops;
     let isOwner = req.body.isOwner;
     let fieldName = req.body.fieldName;
     let totalArea = req.body.totalArea;
@@ -30,6 +31,7 @@ exports.create = async (req, res) => {
             let fieldObject = {
                 fieldCode: fieldCode,
                 farmerCode: farmerCode,
+                crops:crops,
                 regLE: regLE,
                 isOwner: isOwner,
                 fieldName: fieldName,
@@ -44,11 +46,11 @@ exports.create = async (req, res) => {
             };
 
             //Publish field object to org blockchain
-            let mainPublish = await multichain(regLE, [], 'publish', ['field', fieldCode, { json: fieldObject }, 'offchain']);
+            let mainPublish = await multichain(regLE, crops, 'publish', ['field', fieldCode, { json: fieldObject }, 'offchain']);
             if (mainPublish.error == true) {
                 res.status(400).json({ failure: 'Unable to publish field object to stream' });
             } else {
-                let idPublish = await multichain(regLE, [], 'publish', ['idmap', 'field', fieldCode, 'offchain']);
+                let idPublish = await multichain(regLE, crops, 'publish', ['idmap', 'field', fieldCode, 'offchain']);
                 res.status(200).json({ success: 'New field created', farmerCode: farmerCode, fieldCode: fieldCode, legalEntity: req.body.regLE });
             }
 
@@ -111,6 +113,7 @@ exports.update = async (req, res) => {
             res.status(400).json({ failure: 'field code ' + fieldCode + ' awaiting confirmation on blockchain' });
         } else {
             fieldObject = streamItem[0][0].data.json;
+            let crops=fieldObject.crops;
             let updatedfieldObject = { ...fieldObject, ...req.body };
             if (updatedfieldObject.totalArea <= 0 || updatedfieldObject.usableArea <= 0) {
                 res.status(400).json({ failure: 'Total Area or Usable Area cannot be zero' });
@@ -119,7 +122,7 @@ exports.update = async (req, res) => {
                     res.status(400).json({ failure: 'Linked Area or Usable Area exceeds limits' });
                 } else {
                     //Publish updated field object to org blockchain
-                    let mainPublish = await multichain(regLE, [], 'publish', ['field', fieldCode, { json: updatedfieldObject }, 'offchain']);
+                    let mainPublish = await multichain(regLE, crops, 'publish', ['field', fieldCode, { json: updatedfieldObject }, 'offchain']);
                     if (mainPublish.error == true) {
                         res.status(400).json({ failure: 'Unable to publish field object to stream' });
                     } else {

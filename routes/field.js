@@ -25,7 +25,7 @@ const controller = require('../controllers/fieldController.js');
 }
  */
 
-router.post('/create', controller.create);
+router.post('/create/:le', controller.create);
 
 /**
  * field list all sample request:
