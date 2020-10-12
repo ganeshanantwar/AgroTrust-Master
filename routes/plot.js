@@ -3,25 +3,28 @@ const router = express.Router();
 const controller = require('../controllers/fieldController.js');
 
 /**
- * FIELD Codes Range: 0xFE000001 to 0xFEFFFFFF
+ * FIELD Codes Range: 0xAA000001 to 0xAAFFFFFF
  */
 
 /**
  * Field create sample request:
- * URL: POST http://localhost:8000/field/create/GFPCL
+ * URL: POST http://localhost:8000/plot/create/GFPCL
  * JSON:
  * {
     "farmerCode":"fa000001",
-    "crops":["c001"],
-	"isOwner":true,
-	"fieldName":"GAT 123/12",
-	"totalArea":19.27,
-	"usableArea":13.23,
-	"linkedArea":9.18,
-	"soilType":"Black Moist",
-	"waterSources":["Well","Canal"],
-	"geoLoc":[[12,12],[13,13],[14,14],[15,15]],
-	"addr":{"a":"a","b":"b","c":"c","d":"d"}
+    "fieldCode":"fe000001",
+    "mainCrop":"",
+    "interCrops":[],
+    "linkDate":"",
+    "unlinkDate":"",
+    "area":""
+    "geoLoc":[[12,12],[13,13],[14,14],[15,15]],
+    "season":"",
+    "flags":[
+        {"transplanted":false},
+        {"readyToSow":false},
+        {"readyToHarvest":false}
+    ]
 	}
  */
 
@@ -29,21 +32,21 @@ router.post('/create/:le', controller.create);
 
 /**
  * field list all sample request:
- * URL: GET http://localhost:8000/field/list/GFPCL
+ * URL: GET http://localhost:8000/plot/list/GFPCL
  */
 
 router.get('/list/:le', controller.listAll);
 
 /**
  * field list one sample request:
- * URL: GET http://localhost:8000/field/list/GFPCL/fe000001
+ * URL: GET http://localhost:8000/plot/list/GFPCL/fe000001
  */
 
 router.get('/list/:le/:id', controller.listOne);
 
 /**
  * field update sample request:
- * URL: POST http://localhost:8000/field/update/GFPCL/fe000001
+ * URL: POST http://localhost:8000/plot/update/GFPCL/fe000001
  * JSON:
  * {
 	"linkedArea":11.11
