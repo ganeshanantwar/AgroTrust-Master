@@ -10,8 +10,8 @@ const controller = require('../controllers/farmerController.js');
  * Farmer create sample request:
  * URL: POST http://localhost:8000/farmer/create/GFPCL
  * JSON:
- * {
-	"regDate":"15-10-2020",
+ {
+	"regDate":"20-10-2020",
 	"fName":"Ganesh",
 	"mName":"Krishna",
 	"lName":"Anantwar",
@@ -20,9 +20,16 @@ const controller = require('../controllers/farmerController.js');
 	"gender":"Male",
 	"dob":"12-12-1981",
 	"edu":"POSTGRAD",
-	"phones":["18726826","12869111"],
-	"addr":{"a":"a","b":"b","c":"c","d":"d"}
-	}
+    "email":"ganesh@emertech.io",
+	"phone":"9890604028",
+	"addr":{
+        "postalcode":"445302",
+        "town":"Pandharkawada",
+        "block":"Kelapur",
+        "district":"Yavatmal",
+        "state":"Maharashtra"
+    }
+}
  */
 
 router.post('/create/:le', controller.create);
@@ -45,10 +52,10 @@ router.get('/list/:le/:id', controller.listOne);
  * Farmer update sample request:
  * URL: POST http://localhost:8000/farmer/update/GFPCL/fa000001
  * JSON:
- * {
-	"phones":["9999999999","8888888888"],
-	"addr":{"a":"a","b":"b","c":"c","d":"d"}
-    }
+{
+	"phone":"9999999999",
+	"email":"ganesh@emertech.it",
+}
  */
 
 router.post('/update/:le/:id', controller.update);
