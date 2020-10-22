@@ -15,7 +15,7 @@ exports.create = async (req, res) => {
 			!req.body.phone ||
 			!req.body.addr
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for farmer',
 			});
 		}
@@ -29,18 +29,18 @@ exports.create = async (req, res) => {
 			!req.body.usableArea ||
 			!req.body.linkedArea
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for field',
 			});
 		} else if (req.body.totalArea <= 0 || req.body.usableArea <= 0) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Total Area or Usable Area cannot be zero',
 			});
 		} else if (
 			req.body.linkedArea > req.body.usableArea ||
 			req.body.usableArea > req.body.totalArea
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Linked Area or Usable Area exceeds limits',
 			});
 		}
@@ -52,7 +52,7 @@ exports.create = async (req, res) => {
 			!req.body.crops ||
 			!req.body.area
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for plot',
 			});
 		} /*else
@@ -71,7 +71,7 @@ exports.create = async (req, res) => {
 			!req.body.isDefault ||
 			!req.body.addr
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for location',
 			});
 		}
@@ -87,7 +87,7 @@ exports.create = async (req, res) => {
 			!req.body.category ||
 			!req.body.recovery
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for material',
 			});
 		}
@@ -107,12 +107,12 @@ exports.create = async (req, res) => {
 			!req.body.expDays ||
 			!req.body.business
 		) {
-			res.status(400).json({
+			return res.status(400).json({
 				failure: 'Mandatory fields missing for SKU',
 			});
 		}
 	} else {
-		res.status(400).json({ failure: 'Invalid master data type' });
+		return res.status(400).json({ failure: 'Invalid master data type' });
 	}
 
 	let type = req.params.type;
@@ -139,7 +139,7 @@ exports.create = async (req, res) => {
 	let check = await streamer.hashVerify(type, masterHash, le, crops);
 
 	if (check) {
-		res.status(400).json({
+		return res.status(400).json({
 			failure: type + ' with exact same details already exists',
 		});
 	} else {
@@ -168,9 +168,9 @@ exports.create = async (req, res) => {
 		);
 
 		if (result.success) {
-			res.status(200).json(result);
+			return res.status(200).json(result);
 		} else {
-			res.status(400).json(result);
+			return res.status(400).json(result);
 		}
 	}
 };
@@ -187,12 +187,12 @@ exports.listAll = async (req, res) => {
 	) {
 		let result = await streamer.fetchAll(req.params.type, req.params.le, []);
 		if (result.success) {
-			res.status(200).json(result);
+			return res.status(200).json(result);
 		} else {
-			res.status(400).json(result);
+			return res.status(400).json(result);
 		}
 	} else {
-		res.status(400).json({ failure: 'Invalid master data type' });
+		return res.status(400).json({ failure: 'Invalid master data type' });
 	}
 };
 
@@ -213,12 +213,12 @@ exports.listOne = async (req, res) => {
 			[]
 		);
 		if (result.success) {
-			res.status(200).json(result);
+			return res.status(200).json(result);
 		} else {
-			res.status(400).json(result);
+			return res.status(400).json(result);
 		}
 	} else {
-		res.status(400).json({ failure: 'Invalid master data type' });
+		return res.status(400).json({ failure: 'Invalid master data type' });
 	}
 };
 
@@ -242,11 +242,11 @@ exports.update = async (req, res) => {
 			[]
 		);
 		if (result.success) {
-			res.status(200).json(result);
+			return res.status(200).json(result);
 		} else {
-			res.status(400).json(result);
+			return res.status(400).json(result);
 		}
 	} else {
-		res.status(400).json({ failure: 'Invalid master data type' });
+		return res.status(400).json({ failure: 'Invalid master data type' });
 	}
 };
