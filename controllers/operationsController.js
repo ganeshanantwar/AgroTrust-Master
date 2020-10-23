@@ -46,8 +46,9 @@ exports.processInward = async (req, res) => {
 			btuCode: btuCode,
 			btuName: 'INWARD-BATCH',
 			materialCode: materialCode,
-			isFinished: inSKU.isFinished,
+			isFinished: false,
 			origin: fromLoc,
+			currentLoc: toLoc,
 			oneDown: null,
 			oneUp: [],
 			createdDate: date,
@@ -136,6 +137,7 @@ exports.processConvert = async (req, res) => {
 					materialCode: materialCode,
 					isFinished: true,
 					origin: sourceBTU.origin,
+					currentLoc: atLoc,
 					oneDown: [fromBtuCode],
 					oneUp: null,
 					createdDate: date,
@@ -188,6 +190,11 @@ exports.processConvert = async (req, res) => {
 				});
 			}
 		} else {
+			return res.status(200).json({
+				success: false,
+				message:
+					'Work in Progress: This case models raw material to raw material conversion',
+			});
 			//if the target SKU object is raw material, create a single BTU for all SKUs
 			//Specific conversion case not yet implemented
 		}
@@ -195,8 +202,57 @@ exports.processConvert = async (req, res) => {
 };
 
 exports.processDispatch = async (req, res) => {
-	return res.status(200).json({
-		success: false,
-		message: 'TO BE IMPLEMENTED',
+	//validate mandatory fields
+	let LECode = req.params.le;
+	let materialCode = req.body.materialCode;
+	let fromLoc = req.body.fromLoc;
+	let toLoc = req.body.toLoc;
+	let btuCodeList = req.body.btuCodeList;
+	let price = req.body.price;
+	let date = req.body.date;
+	let transferCost = req.body.transferCost;
+	let locationCost = req.body.locationCost;
+
+	let crops = [];
+	crops.push(materialCode.toString().substr(0, 4));
+
+	//filter the BTUs available at from location for dispatch
+	let availableBtus = btuCodeList.filter(async (i) => {
+		let btuObject = await streamer.fetchOne('btu', i, LECode, crops);
+		return btuObject.currentLoc === fromLoc;
 	});
+
+	if (btuCodeList.length > availableBtus.length) {
+		return res.status(200).json({
+			success: false,
+			message: 'Not all items being dispatched available at source location',
+			dispatchItems: btuCodeList.length,
+			availableItems: availableBtus.length,
+		});
+	} else {
+		//Update values of all BTUs and transfer them to target location
+		for (let j = 0; j < btuCodeList.length; j++) {
+			let updatedBtu = await streamer.fetchOne('btu', j, LECode, crops);
+			updatedBtu.currentLoc = toLoc;
+			updatedBtu.totalValue += transferCost / btuCodeList.length;
+			updatedBtu.totalValue += locationCost / btuCodeList.length;
+			updatedBtu.unitValue = updatedBtu.totalValue / updatedBtu.totalWeight;
+			updatedBtu.sellPrice = price;
+			updatedBtu.transfers.push({
+				fromLoc: fromLoc,
+				toLoc: toLoc,
+				date: date,
+				locationCost: locationCost,
+				transferCost: transferCost,
+				margin: price - (locationCost + transferCost) / btuCodeList.length,
+			});
+
+			let updatedBtuPublish = await multichain(LECode, crops, 'publish', [
+				'btu',
+				btuCodeList[j],
+				{ json: updatedBtu },
+				'offchain',
+			]);
+		}
+	}
 };

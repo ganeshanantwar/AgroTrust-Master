@@ -52,7 +52,6 @@ router.post('/convert/:le', controller.processConvert);
     "materialCode":"",
     "skuCode":"",
     "skuQuantity":"",
-    "totalWeight":"",
     "price":"",
     "date":"",
     "locationCost":"",
