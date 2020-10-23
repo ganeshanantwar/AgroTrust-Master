@@ -38,54 +38,160 @@ exports.processInward = async (req, res) => {
 		//adjust total weight with rejections
 		totalWeight -= rejection;
 
-		//check if from location is a plot, if yes set the origin flag
-		let isOrigin = req.body.fromLoc.toString().substr(0, 2) == 'aa';
-		if (isOrigin) {
-			//get next BTU code
-			btuCode = await streamer.nextCode('btu', LECode, crops);
-			//create a transfer object
-			/*let inward_transfer={
-                fromLoc:
-                toLoc:
-                date:
-                locationCost:
-                transferCost:
-                buyerLE:
-                sellerLE:
-                price:
-            }*/
+		//get next BTU code
+		btuCode = await streamer.nextCode('btu', LECode, crops);
 
-			//create a BTU object at plot
-			let btu = {
-				btuCode: btuCode,
-				btuName: 'inward-batch',
-				materialCode: materialCode,
-				skuCode: skuCode,
-				skuQuantity: skuQuantity,
-				isFinished: inSKU.isFinished,
-				origin: fromLoc,
-				oneDown: null,
-				downMixed: false,
-				oneUp: null,
-				upMixed: false,
-				transformDate: date,
-				transformName: 'HARVEST',
-				totalWeight: totalWeight,
-				materialCost: totalWeight * price,
-				transformCost: 0,
-				totalValue: totalWeight * price + locationCost + transferCost,
-				transfers: [],
-			};
+		//create a BTU object at fromLoc and transfer it to receiving location
+		let btuObject = {
+			btuCode: btuCode,
+			btuName: 'INWARD-BATCH',
+			materialCode: materialCode,
+			isFinished: inSKU.isFinished,
+			origin: fromLoc,
+			oneDown: null,
+			oneUp: [],
+			createdDate: date,
+			creationCost: locationCost,
+			totalWeight: totalWeight,
+			estWeight: totalWeight,
+			totalValue: totalWeight * price,
+			unitValue: price,
+			transfers: [
+				{
+					fromLoc: fromLoc,
+					toLoc: toLoc,
+					date: date,
+					locationCost: locationCost,
+					transferCost: transferCost,
+					margin: totalWeight * price - locationCost - transferCost,
+				},
+			],
+		};
+
+		//write the btu to blockchain
+		let btuPublish = await multichain(LECode, crops, 'publish', [
+			'btu',
+			btuCode,
+			{ json: btuObject },
+			'offchain',
+		]);
+
+		let idPublish = await multichain(LECode, crops, 'publish', [
+			'idmap',
+			'btu',
+			btuCode,
+			'offchain',
+		]);
+
+		if (btuPublish.error == true || idPublish.error == true) {
+			return res.status(200).json({
+				success: false,
+				message: 'Could not record inward to blockchain',
+			});
 		} else {
+			return res.status(200).json({
+				success: true,
+				message: 'Inward recorded to blockchain',
+				batchCode: btuCode,
+			});
 		}
 	}
 };
 
 exports.processConvert = async (req, res) => {
-	return res.status(200).json({
-		success: false,
-		message: 'TO BE IMPLEMENTED',
-	});
+	let LECode = req.params.le;
+	let atLoc = req.body.atLoc;
+	let materialCode = req.body.materialCode;
+	let fromBtuCode = req.body.fromBtuCode;
+	let toSkuCode = req.body.toSkuCode;
+	let toSkuQuantity = req.body.toSkuQuantity;
+	let date = req.body.date;
+	let cost = req.body.cost;
+
+	//get the source BTU and target SKU objects
+	let crops = [];
+	crops.push(materialCode.toString().substr(0, 4));
+	let targetSKU = await streamer.fetchOne('sku', toSkuCode, LECode, crops);
+	let sourceBTU = await streamer.fetchOne('btu', fromBtuCode, LECode, crops);
+
+	//check if the source BTU exists at the location
+
+	//check if the BTU object has enough weight for conversion
+	if (sourceBTU.estWeight < targetSKU.nWeight * toSkuQuantity) {
+		return res.status(400).json({
+			success: false,
+			message: 'Source BTU does not have enough material for conversion',
+			sourceWeight: sourceBTU.estWeight,
+			targetWeight: targetSKU.nWeight * toSkuQuantity,
+		});
+	} else {
+		if (targetSKU.isFinished) {
+			//if the target SKU object is finished good, create one BTU for each SKU
+			for (let i = 0; i < toSkuQuantity; i++) {
+				//get next BTU code
+				btuCode = await streamer.nextCode('btu', LECode, crops);
+				let btuObject = {
+					btuCode: btuCode,
+					btuName: 'FINISHED-GOOD',
+					materialCode: materialCode,
+					isFinished: true,
+					origin: sourceBTU.origin,
+					oneDown: [fromBtuCode],
+					oneUp: null,
+					createdDate: date,
+					creationCost: cost / toSkuQuantity,
+					totalWeight: targetSKU.nWeight,
+					totalValue:
+						targetSKU.nWeight * sourceBTU.unitValue +
+						cost / toSkuQuantity,
+					transfers: [],
+				};
+				sourceBTU.oneUp.push(btuCode);
+
+				//write the btu to blockchain
+				let btuPublish = await multichain(LECode, crops, 'publish', [
+					'btu',
+					btuCode,
+					{ json: btuObject },
+					'offchain',
+				]);
+
+				let idPublish = await multichain(LECode, crops, 'publish', [
+					'idmap',
+					'btu',
+					btuCode,
+					'offchain',
+				]);
+			}
+
+			//update source BTU object
+			sourceBTU.estWeight -= targetSKU.nWeight * toSkuQuantity;
+			sourceBTU.totalValue = sourceBTU.estWeight * sourceBTU.unitValue;
+
+			let sourceBtuPublish = await multichain(LECode, crops, 'publish', [
+				'btu',
+				btuCode,
+				{ json: sourceBTU },
+				'offchain',
+			]);
+
+			if (sourceBtuPublish.error == true) {
+				return res.status(200).json({
+					success: false,
+					message: 'Could not record conversion to blockchain',
+				});
+			} else {
+				return res.status(200).json({
+					success: true,
+					message: 'Conversion recorded to blockchain',
+					batchCode: btuCode,
+				});
+			}
+		} else {
+			//if the target SKU object is raw material, create a single BTU for all SKUs
+			//Specific conversion case not yet implemented
+		}
+	}
 };
 
 exports.processDispatch = async (req, res) => {

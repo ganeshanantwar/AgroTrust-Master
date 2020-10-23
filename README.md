@@ -11,10 +11,14 @@ It implements below data which is written to crop blockchains, ensuring immutabi
    4.2 Dispatch SKUs with outgoing stock transfer or sales order if target LE is different
    4.3 Manufacture SKUs with manufacturing orders
 5. Material: Materials are raw agricultural crop produce of a specific variety used in manufacturing SKUs.
-6. SKU: SKUs are units that provide containers for materials to be procured, manufactured or sold. SKUs are either Finished Goods tp be retailed or not. Each SKU is serilaised with a unique identifier authenticated with blockchain.
-7. BTU: BTUs are Blockchain Traceability Units, a unique concept pioneered by AgroTrust. A BTU is a collection of serilaised SKUs with references to the previous BTUs and next BTUs in the value chain, creating a chain of IDs which are later used to calculate forward and backward traceability outputs from any point (please refer AgroTrust QRiosity for more details). BTUs are created and updated through operations routes.
-8. Quality: Defines various grades of materials used in the organization during procurement and sorting & grading. Multiple quality IDs are created for each material classifying them into Grades with physical, biological and chemical parameters at the discretion of the organization. [Currently work in progress]
-9. Safety: Defines pesticides, fungicides, weedicides, fertilizers and all other methods used during crop cultivation that might impact safety of the food products. These safety IDs are referred by plots to record farming activities. [Currently work in progress]
+6. SKU: SKUs are units that provide containers for materials to be procured, manufactured or sold. SKUs are either Finished Goods or Raw Materials.
+7. BTU: BTUs are Blockchain Traceability Units, a unique concept pioneered by AgroTrust.
+   7.1 A BTU is a collection of SKUs with references to the previous BTUs and next BTUs in the value chain, creating a chain of IDs which are later used to calculate forward and backward traceability outputs from any point.
+   7.2 Each BTU is serilaised with a unique identifier authenticated with blockchain.
+   7.3 If constituent SKUs of a BTU are finished goods, then each SKU gets recorded as a unique BTU. Otherwise, onstituent SKUs are combined into a single BTU.
+   7.4 BTUs are created and updated through operations routes.
+8. Quality: Defines various grades of materials used in the organization during procurement and sorting & grading. Multiple quality IDs are created for each material classifying them into Grades with physical, biological and chemical parameters at the discretion of the organization. [To be implemented in version 1.1]
+9. Safety: Defines pesticides, fungicides, weedicides, fertilizers and all other methods used during crop cultivation that might impact safety of the food products. These safety IDs are referred by plots to record farming activities. [To be implemented in version 1.1]
 
 ### What is this repository for?
 

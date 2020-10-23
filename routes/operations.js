@@ -31,8 +31,7 @@ router.post('/inward/:le', controller.processInward);
  {
     "atLoc":"",
     "materialCode":"",
-    "fromSkuCode":"",
-    "fromSkuQuantity":"",
+    "fromBtuCode":"",
     "toSkuCode":"",
     "toSkuQuantity":"",
     "date":"",
