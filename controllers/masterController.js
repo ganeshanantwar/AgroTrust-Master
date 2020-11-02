@@ -94,7 +94,8 @@ exports.create = async (req, res) => {
 	} else if (req.params.type == 'sku') {
 		//validate mandatory fields
 		if (
-			!req.body.materialCode ||
+			!req.body
+				.materialCode /*||
 			!req.body.isFinished ||
 			!req.body.skuName ||
 			!req.body.displayName ||
@@ -105,7 +106,7 @@ exports.create = async (req, res) => {
 			!req.body.gWeight ||
 			!req.body.nWeight ||
 			!req.body.expDays ||
-			!req.body.business
+			!req.body.business*/
 		) {
 			return res.status(400).json({
 				failure: 'Mandatory fields missing for SKU',

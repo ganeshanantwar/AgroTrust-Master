@@ -6,16 +6,20 @@ It implements below data which is written to crop blockchains, ensuring immutabi
 1. Farmer: Information about the farmer captured during registration process by the organization.
 2. Field: One or more static parcels of land cultivated by a farmer. The farmer may or may not own the field he is cultivating.
 3. Plot: When a farmer assigns some part of the field for cultivation of one crop, it becomes a plot. Plots are not static, farmers may decide to continue the same plot for next season or mix/split plots for a different crops. Hence plots need to be registered every season.
-4. Location: Locations are different operational units owned by constitutent LEs of the organization capable of storing SKUs until their shelf-life runs out. Locations can executed three operations:
+4. Location: Locations are different operational units owned by constitutent LEs of the organization capable of storing SKUs until their shelf-life runs out. Locations can execute three operations:
    4.1 Inward SKUs with incoming stock transfer or purchase order if source LE is different
    4.2 Dispatch SKUs with outgoing stock transfer or sales order if target LE is different
    4.3 Manufacture SKUs with manufacturing orders
+
+   A typical value chain can be described as:
+   Production-Collection-Processing-Distribution-Retail-Consumption
+
 5. Material: Materials are raw agricultural crop produce of a specific variety used in manufacturing SKUs.
 6. SKU: SKUs are units that provide containers for materials to be procured, manufactured or sold. SKUs are either Finished Goods or Raw Materials.
-7. BTU: BTUs are Blockchain Traceability Units, a unique concept pioneered by AgroTrust.
-   7.1 A BTU is a collection of SKUs with references to the previous BTUs and next BTUs in the value chain, creating a chain of IDs which are later used to calculate forward and backward traceability outputs from any point.
-   7.2 Each BTU is serilaised with a unique identifier authenticated with blockchain.
-   7.3 If constituent SKUs of a BTU are finished goods, then each SKU gets recorded as a unique BTU. Otherwise, onstituent SKUs are combined into a single BTU.
+7. BTU: BTUs are Blockchain Traced Units, a unique concept pioneered by AgroTrust.
+   7.1 A BTU is a collection of SKUs of the same type, produced at the same time at the same location.
+   7.2 Each BTU references the previous BTUs and next BTUs in the value chain, creating a chain of IDs which are used to calculate forward and backward traceability outputs from any given point.
+   7.3 Each BTU is serilaised with a unique identifier authenticated with blockchain.
    7.4 BTUs are created and updated through operations routes.
 8. Quality: Defines various grades of materials used in the organization during procurement and sorting & grading. Multiple quality IDs are created for each material classifying them into Grades with physical, biological and chemical parameters at the discretion of the organization. [To be implemented in version 1.1]
 9. Safety: Defines pesticides, fungicides, weedicides, fertilizers and all other methods used during crop cultivation that might impact safety of the food products. These safety IDs are referred by plots to record farming activities. [To be implemented in version 1.1]

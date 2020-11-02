@@ -172,7 +172,7 @@ exports.processConvert = async (req, res) => {
 
 			let sourceBtuPublish = await multichain(LECode, crops, 'publish', [
 				'btu',
-				btuCode,
+				sourceBTU.btuCode,
 				{ json: sourceBTU },
 				'offchain',
 			]);
