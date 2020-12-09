@@ -37,7 +37,6 @@ exports.processInward = async (req, res) => {
 	} else {
 		//adjust total weight with rejections
 		totalWeight -= rejection;
-
 		//get next BTU code
 		btuCode = await streamer.nextCode('btu', LECode, crops);
 
@@ -54,7 +53,7 @@ exports.processInward = async (req, res) => {
 			createdDate: date,
 			creationCost: locationCost,
 			totalWeight: totalWeight,
-			estWeight: totalWeight,
+			residualWeight: totalWeight,
 			totalValue: totalWeight * price,
 			unitValue: price,
 			transfers: [
