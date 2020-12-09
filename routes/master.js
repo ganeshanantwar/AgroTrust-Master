@@ -25,13 +25,9 @@ type=farmer
 	"edu":"POSTGRAD",
     "email":"ganesh@emertech.it",
 	"phone":"9999999999",
-	"addr":{
-        "postalcode":"445302",
-        "town":"Pandharkawada",
-        "block":"Kelapur",
-        "district":"Yavatmal",
-        "state":"Maharashtra"
-    }
+	"addr":"qoishaoshahspihs;KBSPOIHYSpHSPHSpiYS",
+	"postalCode":"445302"
+    
 }
 
 */
@@ -43,7 +39,6 @@ type=origin
     "farmerCode":"fa000001",
 	"isOwner":true,
 	"fieldName":"GAT 123/12",
-	"fieldArea":19.27,
 	"soilType":"Black Moist",
 	"waterSrc":["Well","Canal"],
 	"cropID":"",
@@ -66,16 +61,10 @@ type=location
 	"outLocs":[],
 	"facility":"Green Farms Mohadi Facility",
 	"isVirtual":false,
-	"isTransform":true,
 	"isDefault":true,
     "geoLoc":[[12,12],[13,13],[14,14],[15,15]],
-    "addr":{
-        "postalcode":"400206",
-        "town":"Mohadi",
-        "block":"Dindori",
-        "district":"Nashik",
-        "state":"Maharashtra"
-    }
+   	"addr":"qoishaoshahspihs;KBSPOIHYSpHSPHSpiYS",
+	"postalCode":"426008"
 }
 
 */
@@ -88,8 +77,8 @@ type=material
     "varID":"00ed",
 	"cropName":"Orange",
 	"varName":"Nagpur Large",
-	"batchPrefix":"NGOR",
-	"retailGroup":"Nagpur Orange",
+	"prefix":"NGOR",
+	"retailName":"Nagpur Orange",
 	"category":"Citrus Fruits",
 	"recovery":0.86
 }
@@ -107,7 +96,7 @@ type=sku
 	"packType":"Tray-0.1",
 	"uom":"PC",
 	"uWeight":0.3,
-    "quantity":6,
+    "units":6,
     "gWeight":1.9,
     "nWeight":1.8,
     "expDays":7,

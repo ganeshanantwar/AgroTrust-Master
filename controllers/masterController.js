@@ -12,64 +12,39 @@ exports.create = async (req, res) => {
 			!req.body.fName ||
 			!req.body.lName ||
 			!req.body.gender ||
+			!req.body.dob ||
 			!req.body.phone ||
-			!req.body.addr
+			!req.body.addr ||
+			!req.body.postalCode
 		) {
 			return res.status(400).json({
 				failure: 'Mandatory fields missing for farmer',
 			});
 		}
-	} else if (req.params.type == 'field') {
+	} else if (req.params.type == 'origin') {
 		//validate mandatory fields
 		if (
 			!req.body.farmerCode ||
 			!req.body.fieldName ||
 			!req.body.isOwner ||
-			!req.body.totalArea ||
-			!req.body.usableArea ||
-			!req.body.linkedArea
+			!req.body.cropID ||
+			!req.body.varID ||
+			!req.body.plotArea ||
+			!req.body.plantationDate
 		) {
 			return res.status(400).json({
-				failure: 'Mandatory fields missing for field',
-			});
-		} else if (req.body.totalArea <= 0 || req.body.usableArea <= 0) {
-			return res.status(400).json({
-				failure: 'Total Area or Usable Area cannot be zero',
-			});
-		} else if (
-			req.body.linkedArea > req.body.usableArea ||
-			req.body.usableArea > req.body.totalArea
-		) {
-			return res.status(400).json({
-				failure: 'Linked Area or Usable Area exceeds limits',
+				failure: 'Mandatory fields missing for origin',
 			});
 		}
-	} else if (req.params.type == 'plot') {
-		//validate mandatory fields
-		if (
-			!req.body.fieldCode ||
-			!req.body.linkDate ||
-			!req.body.crops ||
-			!req.body.area
-		) {
-			return res.status(400).json({
-				failure: 'Mandatory fields missing for plot',
-			});
-		} /*else
-        1. fetch field object
-        2. check if the field is registered for req.body.crops
-        2. linkedArea += area
-        3. check if linkedArea exceeds limits
-        */
 	} else if (req.params.type == 'location') {
 		//validate mandatory fields
 		if (
 			!req.body.locName ||
 			!req.body.checkpoint ||
 			!req.body.facility ||
-			!req.body.isTransform ||
+			!req.body.isVirtual ||
 			!req.body.isDefault ||
-			!req.body.addr
+			!req.body.postalCode
 		) {
 			return res.status(400).json({
 				failure: 'Mandatory fields missing for location',
@@ -82,8 +57,8 @@ exports.create = async (req, res) => {
 			!req.body.varID ||
 			!req.body.cropName ||
 			!req.body.varName ||
-			!req.body.batchPrefix ||
-			!req.body.retailGroup ||
+			!req.body.prefix ||
+			!req.body.retailName ||
 			!req.body.category ||
 			!req.body.recovery
 		) {
@@ -94,19 +69,18 @@ exports.create = async (req, res) => {
 	} else if (req.params.type == 'sku') {
 		//validate mandatory fields
 		if (
-			!req.body
-				.materialCode /*||
+			!req.body.materialCode ||
 			!req.body.isFinished ||
 			!req.body.skuName ||
 			!req.body.displayName ||
 			!req.body.packType ||
 			!req.body.uom ||
+			!req.body.units ||
 			!req.body.uWeight ||
-			!req.body.quantity ||
 			!req.body.gWeight ||
 			!req.body.nWeight ||
 			!req.body.expDays ||
-			!req.body.business*/
+			!req.body.business
 		) {
 			return res.status(400).json({
 				failure: 'Mandatory fields missing for SKU',
@@ -116,12 +90,16 @@ exports.create = async (req, res) => {
 		return res.status(400).json({ failure: 'Invalid master data type' });
 	}
 
+	//select the correct crop blockchains
 	let type = req.params.type;
 	let le = req.params.le;
 	let crops = [];
-	if (type == 'location') {
+
+	if (type == 'farmer') {
+		crops = req.body.crops;
+	} else if (type == 'location') {
 		crops = [];
-	} else if (type == 'material') {
+	} else if (type == 'material' || type == 'origin') {
 		crops.push(req.body.cropID);
 	} else if (type == 'sku') {
 		crops.push(req.body.materialCode.toString().substr(0, 4));
@@ -180,8 +158,7 @@ exports.create = async (req, res) => {
 exports.listAll = async (req, res) => {
 	if (
 		req.params.type == 'farmer' ||
-		req.params.type == 'field' ||
-		req.params.type == 'plot' ||
+		req.params.type == 'origin' ||
 		req.params.type == 'location' ||
 		req.params.type == 'material' ||
 		req.params.type == 'sku'
@@ -201,8 +178,7 @@ exports.listAll = async (req, res) => {
 exports.listOne = async (req, res) => {
 	if (
 		req.params.type == 'farmer' ||
-		req.params.type == 'field' ||
-		req.params.type == 'plot' ||
+		req.params.type == 'origin' ||
 		req.params.type == 'location' ||
 		req.params.type == 'material' ||
 		req.params.type == 'sku'
@@ -224,13 +200,10 @@ exports.listOne = async (req, res) => {
 };
 
 //Business logic for updation of existing master data
-//Warning: There's a bug in publishUpdate blockchain function in streamer module
-//Work ongoing to fix it
 exports.update = async (req, res) => {
 	if (
 		req.params.type == 'farmer' ||
-		req.params.type == 'field' ||
-		req.params.type == 'plot' ||
+		req.params.type == 'origin' ||
 		req.params.type == 'location' ||
 		req.params.type == 'material' ||
 		req.params.type == 'sku'

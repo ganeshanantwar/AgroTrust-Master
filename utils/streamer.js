@@ -122,7 +122,7 @@ exports.fetchOne = async (stream, code, LECode, crops) => {
 
 //Fixing bug in publishUpdate
 exports.publishUpdate = async (stream, code, update, LECode, crops) => {
-	let streamItem = await multichain(LECode, crops, 'liststreamkeyitems', [
+	let streamItems = await multichain(LECode, crops, 'liststreamkeyitems', [
 		stream,
 		code,
 		true,
@@ -130,27 +130,59 @@ exports.publishUpdate = async (stream, code, update, LECode, crops) => {
 		-1,
 	]);
 
-	if (streamItem[0].error == true || streamItem[0].length == 0) {
-		return {
-			failure: 'Not found ' + stream + ' object with code ' + code,
-		};
-	} else {
-		if (streamItem[0].confirmations == 0) {
-			return {
-				failure:
-					stream + 'code ' + code + ' awaiting confirmation on blockchain',
-			};
+	let streamItem;
+	for (i = 0; i < streamItems.length; i++) {
+		if (streamItems[i][0].length != 0) {
+			streamItem = streamItems[i][0];
+			if (streamItem.confirmations == 0) {
+				return {
+					failure:
+						stream +
+						'code ' +
+						code +
+						' awaiting confirmation on blockchain',
+				};
+			} else {
+				streamObject = streamItem.data.json;
+
+				//select the correct crop blockchains
+				crops = [];
+
+				if (stream == 'farmer') {
+					crops = streamObject.crops;
+				} else if (stream == 'location') {
+					crops = [];
+				} else if (stream == 'material' || stream == 'origin') {
+					crops.push(streamObject.cropID);
+				} else if (stream == 'sku') {
+					crops.push(streamObject.materialCode.toString().substr(0, 4));
+				} else {
+					crops = streamObject.crops;
+				}
+
+				let updatedStreamObject = { ...streamObject, ...update };
+
+				//Publish updated farmer object to org blockchain
+				let dataPublish = await multichain(LECode, crops, 'publish', [
+					stream,
+					code,
+					{ json: updatedStreamObject },
+					'offchain',
+				]);
+
+				return {
+					success: stream + ' with code ' + code + ' updated',
+					code: code,
+					LECode: LECode,
+				};
+			}
+			break;
 		} else {
-			streamObject = streamItem[0][0].data.json;
-			let crops = streamObject.crops;
-			let updatedStreamObject = { ...streamObject, ...update };
-			//Publish updated farmer object to org blockchain
-			let dataPublish = await multichain(LECode, crops, 'publish', [
-				stream,
-				code,
-				{ json: updatedStreamObject },
-				'offchain',
-			]);
+			return {
+				failure: 'Not found ' + stream + ' object with code ' + code,
+			};
 		}
 	}
+
+	console.log(streamItem);
 };
