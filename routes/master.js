@@ -37,32 +37,20 @@ type=farmer
 */
 
 /*
-type=field
+type=origin
 
 {
     "farmerCode":"fa000001",
-    "crops":["c001"],
 	"isOwner":true,
 	"fieldName":"GAT 123/12",
-	"totalArea":19.27,
-	"usableArea":13.23,
-	"linkedArea":9.18,
+	"fieldArea":19.27,
 	"soilType":"Black Moist",
 	"waterSrc":["Well","Canal"],
-	"geoLoc":[[12,12],[13,13],[14,14],[15,15]]
-}
-
-*/
-
-/*
-type=plot
-
-{
-    "fieldCode":"fe000001",
-    "crops":["c001"]
-	"linkDate":"20-10-2020",
-	"unlinkDate":"31-12-2020",
-	"area":19.27,
+	"cropID":"",
+	"varID":"",
+	"plotArea":9.18,
+	"plantationDate":"20-10-2020",
+	"harvestDate":"31-12-2020",
 	"geoLoc":[[12,12],[13,13],[14,14],[15,15]]
 }
 
