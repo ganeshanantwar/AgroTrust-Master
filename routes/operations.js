@@ -50,8 +50,7 @@ router.post('/convert/:le', controller.processConvert);
     "fromLoc":"",
     "toLoc":"",
     "materialCode":"",
-    "skuCode":"",
-    "skuQuantity":"",
+    "btuCodeList":[]
     "price":"",
     "date":"",
     "locationCost":"",

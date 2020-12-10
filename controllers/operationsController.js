@@ -51,7 +51,7 @@ exports.processInward = async (req, res) => {
 			oneDown: null,
 			oneUp: [],
 			createdDate: date,
-			creationCost: locationCost,
+			productionCost: 0,
 			totalWeight: totalWeight,
 			residualWeight: totalWeight,
 			totalValue: totalWeight * price,
@@ -92,7 +92,7 @@ exports.processInward = async (req, res) => {
 			return res.status(200).json({
 				success: true,
 				message: 'Inward recorded to blockchain',
-				batchCode: btuCode,
+				btuCode: btuCode,
 			});
 		}
 	}
@@ -114,19 +114,18 @@ exports.processConvert = async (req, res) => {
 	let targetSKU = await streamer.fetchOne('sku', toSkuCode, LECode, crops);
 	let sourceBTU = await streamer.fetchOne('btu', fromBtuCode, LECode, crops);
 
-	//check if the source BTU exists at the location
-
 	//check if the BTU object has enough weight for conversion
-	if (sourceBTU.estWeight < targetSKU.nWeight * toSkuQuantity) {
+	if (sourceBTU.residualWeight < targetSKU.nWeight * toSkuQuantity) {
 		return res.status(400).json({
 			success: false,
 			message: 'Source BTU does not have enough material for conversion',
-			sourceWeight: sourceBTU.estWeight,
+			sourceWeight: sourceBTU.residualWeight,
 			targetWeight: targetSKU.nWeight * toSkuQuantity,
 		});
 	} else {
 		if (targetSKU.isFinished) {
 			//if the target SKU object is finished good, create one BTU for each SKU
+			let btuSet = [];
 			for (let i = 0; i < toSkuQuantity; i++) {
 				//get next BTU code
 				btuCode = await streamer.nextCode('btu', LECode, crops);
@@ -140,7 +139,7 @@ exports.processConvert = async (req, res) => {
 					oneDown: [fromBtuCode],
 					oneUp: null,
 					createdDate: date,
-					creationCost: cost / toSkuQuantity,
+					productionCost: cost / toSkuQuantity,
 					totalWeight: targetSKU.nWeight,
 					totalValue:
 						targetSKU.nWeight * sourceBTU.unitValue +
@@ -148,6 +147,7 @@ exports.processConvert = async (req, res) => {
 					transfers: [],
 				};
 				sourceBTU.oneUp.push(btuCode);
+				btuSet.push(btuCode);
 
 				//write the btu to blockchain
 				let btuPublish = await multichain(LECode, crops, 'publish', [
@@ -166,8 +166,8 @@ exports.processConvert = async (req, res) => {
 			}
 
 			//update source BTU object
-			sourceBTU.estWeight -= targetSKU.nWeight * toSkuQuantity;
-			sourceBTU.totalValue = sourceBTU.estWeight * sourceBTU.unitValue;
+			sourceBTU.residualWeight -= targetSKU.nWeight * toSkuQuantity;
+			sourceBTU.totalValue = sourceBTU.residualWeight * sourceBTU.unitValue;
 
 			let sourceBtuPublish = await multichain(LECode, crops, 'publish', [
 				'btu',
@@ -185,7 +185,7 @@ exports.processConvert = async (req, res) => {
 				return res.status(200).json({
 					success: true,
 					message: 'Conversion recorded to blockchain',
-					batchCode: btuCode,
+					btuCode: btuSet,
 				});
 			}
 		} else {
@@ -194,7 +194,7 @@ exports.processConvert = async (req, res) => {
 				message:
 					'Work in Progress: This case models raw material to raw material conversion',
 			});
-			//if the target SKU object is raw material, create a single BTU for all SKUs
+			//if the target SKU object is not finished goods, create a single BTU for all SKUs
 			//Specific conversion case not yet implemented
 		}
 	}
@@ -207,7 +207,13 @@ exports.processDispatch = async (req, res) => {
 	let fromLoc = req.body.fromLoc;
 	let toLoc = req.body.toLoc;
 	let btuCodeList = req.body.btuCodeList;
-	let price = req.body.price;
+
+	let price = 0;
+
+	if (req.body.price) {
+		price = req.body.price;
+	}
+
 	let date = req.body.date;
 	let transferCost = req.body.transferCost;
 	let locationCost = req.body.locationCost;
@@ -216,34 +222,69 @@ exports.processDispatch = async (req, res) => {
 	crops.push(materialCode.toString().substr(0, 4));
 
 	//filter the BTUs available at from location for dispatch
-	let availableBtus = btuCodeList.filter(async (i) => {
+	let absentBtus = btuCodeList.filter(async (i) => {
 		let btuObject = await streamer.fetchOne('btu', i, LECode, crops);
-		return btuObject.currentLoc === fromLoc;
+		return btuObject.currentLoc != fromLoc;
 	});
 
-	if (btuCodeList.length > availableBtus.length) {
+	if (absentBtus.length > 0) {
 		return res.status(200).json({
 			success: false,
 			message: 'Not all items being dispatched available at source location',
-			dispatchItems: btuCodeList.length,
-			availableItems: availableBtus.length,
+			dispatchItems: btuCodeList,
+			absentItems: absentBtus,
 		});
 	} else {
+		let fromLocObject = await streamer.fetchOne(
+			'location',
+			fromLoc,
+			LECode,
+			crops
+		);
+		let toLocObject = await streamer.fetchOne(
+			'location',
+			toLoc,
+			LECode,
+			crops
+		);
+
 		//Update values of all BTUs and transfer them to target location
 		for (let j = 0; j < btuCodeList.length; j++) {
-			let updatedBtu = await streamer.fetchOne('btu', j, LECode, crops);
+			let updatedBtu = await streamer.fetchOne(
+				'btu',
+				btuCodeList[j],
+				LECode,
+				crops
+			);
+
 			updatedBtu.currentLoc = toLoc;
-			updatedBtu.totalValue += transferCost / btuCodeList.length;
-			updatedBtu.totalValue += locationCost / btuCodeList.length;
+
+			if (fromLocObject.regLE == toLocObject.regLE) {
+				//This is an internal transfer, margin is zero
+				//That means according to principles of value chain - price = sourceUnitValue+(locationCost + transferCost) / btuCodeList.length,
+				//override price
+				price =
+					updatedBtu.unitValue +
+					locationCost / btuCodeList.length +
+					transferCost / btuCodeList.length;
+				margin = 0;
+			} else {
+				//This is a sell transaction to another LE, margin is not zero
+				margin =
+					price -
+					locationCost / btuCodeList.length +
+					transferCost / btuCodeList.length;
+			}
+
+			updatedBtu.totalValue = updatedBtu.totalWeight * price;
 			updatedBtu.unitValue = updatedBtu.totalValue / updatedBtu.totalWeight;
-			updatedBtu.sellPrice = price;
 			updatedBtu.transfers.push({
 				fromLoc: fromLoc,
 				toLoc: toLoc,
 				date: date,
-				locationCost: locationCost,
-				transferCost: transferCost,
-				margin: price - (locationCost + transferCost) / btuCodeList.length,
+				locationCost: locationCost / btuCodeList.length,
+				transferCost: transferCost / btuCodeList.length,
+				margin: margin,
 			});
 
 			let updatedBtuPublish = await multichain(LECode, crops, 'publish', [
@@ -253,5 +294,11 @@ exports.processDispatch = async (req, res) => {
 				'offchain',
 			]);
 		}
+
+		return res.status(200).json({
+			success: true,
+			message: 'Dispatch recorded to blockchain',
+			btuCode: btuCodeList,
+		});
 	}
 };
