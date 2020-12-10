@@ -42,8 +42,6 @@ exports.create = async (req, res) => {
 			!req.body.locName ||
 			!req.body.checkpoint ||
 			!req.body.facility ||
-			!req.body.isVirtual ||
-			!req.body.isDefault ||
 			!req.body.postalCode
 		) {
 			return res.status(400).json({
@@ -70,7 +68,6 @@ exports.create = async (req, res) => {
 		//validate mandatory fields
 		if (
 			!req.body.materialCode ||
-			!req.body.isFinished ||
 			!req.body.skuName ||
 			!req.body.displayName ||
 			!req.body.packType ||

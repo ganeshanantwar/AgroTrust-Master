@@ -1,0 +1,117 @@
+[
+	{
+		"farmerCode": "fa000001",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/11",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c001",
+		"varID": "e001",
+		"plotArea": 0.1619,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[73.79501913, 20.01421334],
+			[73.79525517, 20.01408901],
+			[73.79531954, 20.01389748],
+			[73.79501556, 20.01392112],
+			[73.79501913, 20.01421334]
+		]
+	},
+	{
+		"farmerCode": "fa000002",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/12",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c001",
+		"varID": "e001",
+		"plotArea": 0.4047,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[73.8851266, 20.17782628],
+			[73.88491169, 20.17784059],
+			[73.88478136, 20.17784059],
+			[73.88477165, 20.17798114],
+			[73.88510719, 20.17797334],
+			[73.8851266, 20.17782628]
+		]
+	},
+	{
+		"farmerCode": "fa000003",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/13",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c003",
+		"varID": "e003",
+		"plotArea": 0.1328,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[73.97596098, 20.13821597],
+			[73.97652324, 20.13804568],
+			[73.97645686, 20.13786908],
+			[73.97588924, 20.13803057],
+			[73.97596098, 20.13821597]
+		]
+	},
+	{
+		"farmerCode": "fa000004",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/14",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c003",
+		"varID": "e003",
+		"plotArea": 0.4,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[74.7490504, 19.08653731],
+			[74.74916808, 19.08700466],
+			[74.75038949, 19.08676132],
+			[74.75025002, 19.08614981],
+			[74.7490504, 19.08653731]
+		]
+	},
+	{
+		"farmerCode": "fa000005",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/15",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c005",
+		"varID": "e005",
+		"plotArea": 0.0025,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[73.99155132, 20.22938708],
+			[73.99154127, 20.22935594],
+			[73.99149198, 20.2293616],
+			[73.99150405, 20.22941319],
+			[73.99155132, 20.22938708]
+		]
+	},
+	{
+		"farmerCode": "fa000006",
+		"isOwner": true,
+		"fieldName": "GAT 123/456/16",
+		"soilType": "Black Moist",
+		"waterSrc": ["Well", "Canal"],
+		"cropID": "c005",
+		"varID": "e005",
+		"plotArea": 0.0025,
+		"plantationDate": "20-10-2020",
+		"harvestDate": "31-12-2020",
+		"geoLoc": [
+			[73.99155132, 20.22938708],
+			[73.99154127, 20.22935594],
+			[73.99149198, 20.2293616],
+			[73.99150405, 20.22941319],
+			[73.99155132, 20.22938708]
+		]
+	}
+]

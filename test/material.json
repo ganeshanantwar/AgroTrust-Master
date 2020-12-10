@@ -1,0 +1,62 @@
+[
+	{
+		"cropID": "c001",
+		"varID": "e001",
+		"cropName": "Orange",
+		"varName": "Nagpur Large",
+		"prefix": "NGOR",
+		"retailName": "Nagpur Orange",
+		"category": "Citrus Fruits",
+		"recovery": 0.86
+	},
+	{
+		"cropID": "c002",
+		"varID": "e002",
+		"cropName": "Mandarin",
+		"varName": "Mandarin Chinese",
+		"prefix": "MAND",
+		"retailName": "Mandarin",
+		"category": "Citrus Fruits",
+		"recovery": 0.86
+	},
+	{
+		"cropID": "c003",
+		"varID": "e003",
+		"cropName": "Spinach",
+		"varName": "Standard",
+		"prefix": "SPNC",
+		"retailName": "Spinach",
+		"category": "Leafy Vegetables",
+		"recovery": 0.6
+	},
+	{
+		"cropID": "c004",
+		"varID": "e004",
+		"cropName": "Fenugreek",
+		"varName": "Pusa-333",
+		"prefix": "FNGK",
+		"retailName": "Fenugreek",
+		"category": "Leafy Vegetables",
+		"recovery": 0.6
+	},
+	{
+		"cropID": "c005",
+		"varID": "e005",
+		"cropName": "Cucumber",
+		"varName": "Arka-56",
+		"prefix": "CUCU",
+		"retailName": "Cucumber White",
+		"category": "Cucurbits & Gourds",
+		"recovery": 0.75
+	},
+	{
+		"cropID": "c006",
+		"varID": "e006",
+		"cropName": "Bottle Gourd",
+		"varName": "Pus-777",
+		"prefix": "BTGD",
+		"retailName": "Bottle Gourd",
+		"category": "Cucurbits & Gourds",
+		"recovery": 0.75
+	}
+]
