@@ -224,17 +224,17 @@ exports.processDispatch = async (req, res) => {
 	crops.push(materialCode.toString().substr(0, 4));
 
 	//filter the BTUs available at from location for dispatch
-	let absentBtus = btuCodeList.filter(async (i) => {
+	let availableBtus = btuCodeList.filter(async (i) => {
 		let btuObject = await streamer.fetchOne('btu', i, LECode, crops);
-		return btuObject.currentLoc != fromLoc;
+		return btuObject.currentLoc === fromLoc;
 	});
 
-	if (absentBtus.length > 0) {
+	if (btuCodeList.length != availableBtus.length) {
 		return res.status(200).json({
 			success: false,
 			message: 'Not all items being dispatched available at source location',
 			dispatchItems: btuCodeList,
-			absentItems: absentBtus,
+			availableItems: availableBtus,
 		});
 	} else {
 		let fromLocObject = await streamer.fetchOne(
