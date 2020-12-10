@@ -1,18 +1,16 @@
 #!/bin/bash
 
 curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-10-2019","fName":"Ganesh","mName":"Krishna","lName":"Anantwar","crops":["c001"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/ganesh_anantwar.jpg","gender":"Male","dob":"12-12-1981","edu":"POSTGRAD","email":"ganesh@emertech.io","phone":"9890604028","addr":"Res. Pandharkawada, Dist. Yavatmal, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
-sleep 2
 
 curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-11-2019","fName":"Gunvant","mName":"Ramesh","lName":"Sarpate","crops":["c001"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/gunvant_sarpate.jpg","gender":"Male","dob":"11-11-1989","edu":"GRAD","email":null,"phone":"9982651785","addr":"Res. Nanded, Dist. Nanded, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
-sleep 2
 
-curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-12-2019","fName":"Tejal","lName":"Mishram","crops":["c002"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/tejal_mishram.jpg","gender":"Female","dob":"02-05-1986","edu":"HSC","phone":"9999999999","addr":"qoishaoshahspihs;KBSPOIHYSpHSPHSpiYS","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
+curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-12-2019","fName":"Tejal","lName":"Mishram","crops":["c003"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/tejal_mishram.jpg","gender":"Female","dob":"02-05-1986","edu":"HSC","phone":"9999999999","addr":"qoishaoshahspihs;KBSPOIHYSpHSPHSpiYS","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
 
-curl -X POST -H "Content-Type: application/json" -d '{"regDate":"06-08-2020","fName":"Dattu","mName":"Prabhakar","lName":"Purkar","crops":["c002"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/dattu_purkar.jpg","gender":"Male","dob":"10-11-1976","edu":"SSC","phone":"9817155112","addr":"Res. Adgaon, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
+curl -X POST -H "Content-Type: application/json" -d '{"regDate":"06-08-2020","fName":"Dattu","mName":"Prabhakar","lName":"Purkar","crops":["c003"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/dattu_purkar.jpg","gender":"Male","dob":"10-11-1976","edu":"SSC","phone":"9817155112","addr":"Res. Adgaon, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
 
-curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-01-2020","fName":"Uttam","mName":"Balu","lName":"Shinde","crops":["c003"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/uttam_shinde.jpg","gender":"Male","dob":"28-02-1983","edu":"GRAD","phone":"9162416411","addr":"Res. Dindori, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
+curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-01-2020","fName":"Uttam","mName":"Balu","lName":"Shinde","crops":["c005"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/uttam_shinde.jpg","gender":"Male","dob":"28-02-1983","edu":"GRAD","phone":"9162416411","addr":"Res. Dindori, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
 
-curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-03-2020","fName":"Santosh","mName":"Shivaji","lName":"Gaikwad","crops":["c003"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/santosh_gaikwad.jpg","gender":"Male","dob":"12-04-1974","edu":"HSC","phone":"9621725618","addr":"Res. Mohadi, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
+curl -X POST -H "Content-Type: application/json" -d '{"regDate":"20-03-2020","fName":"Santosh","mName":"Shivaji","lName":"Gaikwad","crops":["c005"],"assoc":"FPC Member","img":"https://media.agrotrust.io/GFPCL/santosh_gaikwad.jpg","gender":"Male","dob":"12-04-1974","edu":"HSC","phone":"9621725618","addr":"Res. Mohadi, Dist. Nashik, MH, India","postalCode":"445302"}' http://localhost:8000/master/create/farmer/GFPCL
 
 curl -X POST -H "Content-Type: application/json" -d '{"farmerCode":"fa000001","isOwner":true,"fieldName":"GAT 123/456/11","soilType":"Black Moist","waterSrc":["Well","Canal"],"cropID":"c001","varID":"e001","plotArea":0.1619,"plantationDate":"20-10-2020","harvestDate":"31-12-2020","geoLoc":[[73.79501913,20.01421334],[73.79525517,20.01408901],[73.79531954,20.01389748],[73.79501556,20.01392112],[73.79501913,20.01421334]]}' http://localhost:8000/master/create/origin/GFPCL
 
@@ -59,3 +57,28 @@ curl -X POST -H "Content-Type: application/json" -d '{"locName":"F&V DC Pune","c
 curl -X POST -H "Content-Type: application/json" -d '{"locName":"F&V Retail Store Pune","checkpoint":"Retail Center","inLocs":[],"outLocs":[],"facility":"Green Farms Store Pune","isVirtual":false,"isDefault":false,"geoLoc":[[12,12],[13,13],[14,14],[15,15]],"addr":"Green Farms Store, Dist. Pune, MH, India","postalCode":"400206"}' http://localhost:8000/master/create/location/GFPCL
 
 curl -X POST -H "Content-Type: application/json" -d '{"locName":"F&V Retail Store Mumbai","checkpoint":"Retail Center","inLocs":[],"outLocs":[],"facility":"Green Farms Store Mumbai","isVirtual":false,"isDefault":false,"geoLoc":[[12,12],[13,13],[14,14],[15,15]],"addr":"Green Farms Store, Dist. Mumbai Suburbs, MH, India","postalCode":"400206"}' http://localhost:8000/master/create/location/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000001","toLoc":"ab000001","materialCode":"c001e001","skuCode":"ea000001","skuQuantity":100,"totalWeight":491,"price":31.9,"rejection":43,"date":"09-12-2020","locationCost":12876,"transferCost":1565}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000002","toLoc":"ab000001","materialCode":"c001e001","skuCode":"ea000001","skuQuantity":150,"totalWeight":743,"price":26.5,"rejection":34,"date":"10-12-2020","locationCost":19654,"transferCost":1100}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000001","toLoc":"ab000001","materialCode":"c003e003","skuCode":"ea000001","skuQuantity":90,"totalWeight":619,"price":55.0,"rejection":78,"date":"11-12-2020","locationCost":26654,"transferCost":900}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000002","toLoc":"ab000001","materialCode":"c003e003","skuCode":"ea000001","skuQuantity":190,"totalWeight":1310,"price":47.3,"rejection":99,"date":"12-12-2020","locationCost":34654,"transferCost":1000}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000001","toLoc":"ab000001","materialCode":"c005e005","skuCode":"ea000001","skuQuantity":100,"totalWeight":793,"price":19.56,"rejection":67,"date":"13-12-2020","locationCost":10654,"transferCost":800}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"fromLoc":"fe000002","toLoc":"ab000001","materialCode":"c005e005","skuCode":"ea000001","skuQuantity":150,"totalWeight":1180,"price":28.6,"rejection":13,"date":"14-12-2020","locationCost":13654,"transferCost":800}' http://localhost:8000/operations/inward/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c001e001","fromBtuCode":"10000001","toSkuCode":"ea000002","toSkuQuantity":"25","date":"10-12-2020","cost":123.7}' http://localhost:8000/operations/convert/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c001e001","fromBtuCode":"10000002","toSkuCode":"ea000002","toSkuQuantity":"25","date":"11-12-2020","cost":123.7}' http://localhost:8000/operations/convert/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c003e003","fromBtuCode":"10000001","toSkuCode":"ea000002","toSkuQuantity":"25","date":"12-12-2020","cost":203.7}' http://localhost:8000/operations/convert/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c003e003","fromBtuCode":"10000002","toSkuCode":"ea000002","toSkuQuantity":"25","date":"13-12-2020","cost":203.7}' http://localhost:8000/operations/convert/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c005e005","fromBtuCode":"10000001","toSkuCode":"ea000002","toSkuQuantity":"25","date":"14-12-2020","cost":154.7}' http://localhost:8000/operations/convert/GFPCL
+
+curl -X POST -H "Content-Type: application/json" -d '{"atLoc":"ab000001","materialCode":"c005e005","fromBtuCode":"10000002","toSkuCode":"ea000002","toSkuQuantity":"25","date":"15-12-2020","cost":154.7}' http://localhost:8000/operations/convert/GFPCL
+
